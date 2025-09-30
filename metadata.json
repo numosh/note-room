@@ -1,0 +1,5 @@
+{
+  "name": "Note Room",
+  "description": "An interactive web application for musicians to explore, visualize, and understand music chord theory. Breakdown chords into notes, see interval relationships, and view fingerings on piano and guitar.",
+  "requestFramePermissions": []
+}
