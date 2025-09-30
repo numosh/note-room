@@ -4,7 +4,17 @@
 
 # Note Room
 
-An interactive web application for musicians to explore, visualize, and understand music chord theory. Breakdown chords into notes, see interval relationships, and view fingerings on piano and guitar.
+An advanced interactive web application for musicians to explore, visualize, and understand music chord theory. 
+
+## Features
+
+- **Chord Theory Explorer**: Comprehensive chord analysis with inversions
+- **Interactive Piano & Fretboards**: Visual chord representations on multiple instruments
+- **Chord Identifier**: Select notes to identify possible chords
+- **Circle of Fifths**: Interactive visualization of key relationships
+- **Ear Training Quiz**: Test your chord recognition skills
+- **Chord Progressions**: Generate and analyze common progressions
+- **Scale Explorer**: Study multiple musical scales and modes
 
 This contains everything you need to run your app locally.
 

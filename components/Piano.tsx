@@ -5,7 +5,11 @@ interface PianoProps {
   chordNotes: Note[];
   scaleNotes: Note[];
   rootNote: Note;
+  bassNote: Note;
   onNotePlay: (note: Note) => void;
+  identifyMode?: boolean;
+  selectedNotes?: Note[];
+  onNoteSelect?: (note: Note) => void;
 }
 
 const PIANO_KEYS = [
@@ -25,9 +29,18 @@ const PIANO_KEYS = [
   { note: 'B', type: 'white', octave: 5 },
 ];
 
-const Piano: React.FC<PianoProps> = ({ chordNotes, scaleNotes, rootNote, onNotePlay }) => {
+const Piano: React.FC<PianoProps> = ({ chordNotes, scaleNotes, rootNote, bassNote, onNotePlay, identifyMode = false, selectedNotes = [], onNoteSelect }) => {
    const getKeyClass = (note: Note, type: 'white' | 'black') => {
+    if (identifyMode && selectedNotes.includes(note)) {
+      return {
+          baseClass: 'bg-green-500 hover:bg-green-400',
+          textClass: 'text-white',
+          ringClass: 'ring-4 ring-offset-2 ring-offset-gray-800 ring-green-300 z-20',
+      };
+    }
+
     const isRoot = note === rootNote;
+    const isBass = note === bassNote;
     const isChordNote = chordNotes.includes(note);
     const isScaleNote = scaleNotes.includes(note);
 
@@ -45,6 +58,11 @@ const Piano: React.FC<PianoProps> = ({ chordNotes, scaleNotes, rootNote, onNoteP
       textClass = 'text-white';
     }
 
+    if (isBass && !isRoot) {
+      baseClass = 'bg-purple-500 hover:bg-purple-400';
+      textClass = 'text-white';
+    }
+
     if (isRoot) {
         ringClass = 'ring-4 ring-offset-2 ring-offset-gray-800 ring-yellow-400 z-20';
     }
@@ -54,7 +72,7 @@ const Piano: React.FC<PianoProps> = ({ chordNotes, scaleNotes, rootNote, onNoteP
 
   return (
     <div className="bg-gray-800/50 p-6 rounded-lg border border-gray-700">
-      <h3 className="text-xl font-bold text-gray-200 mb-4">Piano View</h3>
+      <h3 className="text-xl font-bold text-gray-200 mb-4">{identifyMode ? 'Select Notes to Identify Chord' : 'Piano View'}</h3>
       <div className="relative flex h-48 select-none">
         {PIANO_KEYS.map(({ note, type, octave }, index) => {
           if (type !== 'white') return null;
@@ -65,7 +83,7 @@ const Piano: React.FC<PianoProps> = ({ chordNotes, scaleNotes, rootNote, onNoteP
           return (
              <div key={`${note}${octave}-${index}-container`} className="relative flex-1" style={whiteKeyContainerStyle}>
                 <div
-                    onMouseDown={() => onNotePlay(note as Note)}
+                    onMouseDown={() => (identifyMode && onNoteSelect) ? onNoteSelect(note as Note) : onNotePlay(note as Note)}
                     className={`w-full h-full border-2 border-gray-900 rounded-b-md transition-colors duration-200 cursor-pointer ${baseClass} ${ringClass}`}
                 >
                     <span className={`absolute bottom-2 left-1/2 -translate-x-1/2 font-semibold ${textClass}`}>
@@ -91,7 +109,7 @@ const Piano: React.FC<PianoProps> = ({ chordNotes, scaleNotes, rootNote, onNoteP
             return (
                 <div
                     key={`${note}${octave}-${index}`}
-                    onMouseDown={() => onNotePlay(note as Note)}
+                    onMouseDown={() => (identifyMode && onNoteSelect) ? onNoteSelect(note as Note) : onNotePlay(note as Note)}
                     className={`absolute top-0 h-2/3 border-2 border-gray-900 rounded-b-md transition-colors duration-200 z-30 cursor-pointer ${baseClass} ${ringClass}`}
                     style={blackKeyStyle}
                 >
@@ -103,11 +121,18 @@ const Piano: React.FC<PianoProps> = ({ chordNotes, scaleNotes, rootNote, onNoteP
         })}
 
       </div>
-       <div className="flex justify-center items-center flex-wrap gap-x-4 gap-y-2 mt-4 text-sm">
-        <div className="flex items-center"><div className="w-4 h-4 rounded-full bg-yellow-400 ring-2 ring-yellow-600 mr-2"></div>Root</div>
-        <div className="flex items-center"><div className="w-4 h-4 rounded-full bg-cyan-500 mr-2"></div>Chord Note</div>
-        <div className="flex items-center"><div className="w-4 h-4 rounded-full bg-cyan-900 mr-2"></div>Scale Note</div>
-      </div>
+       {identifyMode ? (
+         <div className="flex justify-center items-center flex-wrap gap-x-4 gap-y-2 mt-4 text-sm">
+            <div className="flex items-center"><div className="w-4 h-4 rounded-full bg-green-500 ring-2 ring-green-700 mr-2"></div>Selected Note</div>
+         </div>
+       ) : (
+         <div className="flex justify-center items-center flex-wrap gap-x-4 gap-y-2 mt-4 text-sm">
+          <div className="flex items-center"><div className="w-4 h-4 rounded-full bg-yellow-400 ring-2 ring-yellow-600 mr-2"></div>Root</div>
+          <div className="flex items-center"><div className="w-4 h-4 rounded-full bg-purple-500 mr-2"></div>Bass Note</div>
+          <div className="flex items-center"><div className="w-4 h-4 rounded-full bg-cyan-500 mr-2"></div>Chord Note</div>
+          <div className="flex items-center"><div className="w-4 h-4 rounded-full bg-cyan-900 mr-2"></div>Scale Note</div>
+        </div>
+       )}
     </div>
   );
 };

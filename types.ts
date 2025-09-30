@@ -1,5 +1,7 @@
 export type Note = 'C' | 'C#' | 'D' | 'D#' | 'E' | 'F' | 'F#' | 'G' | 'G#' | 'A' | 'A#' | 'B';
 
+export type Inversion = 0 | 1 | 2 | 3;
+
 export type ChordTypeName = 
   | 'Major' 
   | 'Minor' 
@@ -18,11 +20,21 @@ export type ChordTypeName =
 export interface ChordData {
   name: string;
   root: Note;
+  bassNote: Note;
   notes: Note[];
   intervals: string[];
+  inversion: Inversion;
+  type: ChordTypeName;
 }
 
-export type ScaleTypeName = 'Major (Ionian)' | 'Dorian';
+export type ScaleTypeName = 
+  | 'Major (Ionian)' 
+  | 'Dorian' 
+  | 'Phrygian' 
+  | 'Lydian' 
+  | 'Mixolydian' 
+  | 'Aeolian (Minor)' 
+  | 'Locrian';
 
 export interface ScaleData {
   name: string;
@@ -42,4 +54,9 @@ export interface BassVoicing {
 export interface ProgressionChord {
   chord: ChordData;
   romanNumeral: string;
+}
+
+export interface QuizQuestion {
+  correctAnswer: ChordData;
+  options: ChordTypeName[];
 }

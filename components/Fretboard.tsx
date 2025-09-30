@@ -9,9 +9,10 @@ interface FretboardProps {
   scaleNotes: Note[];
   chordNotes: Note[];
   rootNote: Note;
+  bassNote: Note;
 }
 
-const Fretboard: React.FC<FretboardProps> = ({ voicing, chordName, scaleNotes, chordNotes, rootNote }) => {
+const Fretboard: React.FC<FretboardProps> = ({ voicing, chordName, scaleNotes, chordNotes, rootNote, bassNote }) => {
   const NUM_FRETS = 12;
   const stringNames = ['e', 'B', 'G', 'D', 'A', 'E'];
 
@@ -21,11 +22,13 @@ const Fretboard: React.FC<FretboardProps> = ({ voicing, chordName, scaleNotes, c
     if (!scaleNotes.includes(note)) return null;
 
     const isRoot = note === rootNote;
+    const isBass = note === bassNote;
     const isChordNote = chordNotes.includes(note);
     const isVoicingNote = voicing?.frets[stringIndex] === fret;
 
     let dotClass = 'border-2 border-gray-400 text-gray-400';
     if (isChordNote) dotClass = 'bg-cyan-900 text-cyan-200 border-cyan-700';
+    if (isBass && !isRoot) dotClass = 'bg-purple-500 text-white border-purple-400';
     if (isRoot) dotClass = 'bg-yellow-400 text-black border-yellow-600 font-bold';
     if (isVoicingNote) dotClass = 'bg-cyan-500 text-white border-cyan-300 ring-2 ring-white scale-110';
     
@@ -90,6 +93,7 @@ const Fretboard: React.FC<FretboardProps> = ({ voicing, chordName, scaleNotes, c
       <div className="flex justify-center items-center flex-wrap gap-x-4 gap-y-2 mt-4 text-sm">
         <div className="flex items-center"><div className="w-4 h-4 rounded-full bg-cyan-500 ring-2 ring-white mr-2"></div>Voicing Note</div>
         <div className="flex items-center"><div className="w-4 h-4 rounded-full bg-yellow-400 mr-2"></div>Root Note</div>
+        <div className="flex items-center"><div className="w-4 h-4 rounded-full bg-purple-500 mr-2"></div>Bass Note</div>
         <div className="flex items-center"><div className="w-4 h-4 rounded-full bg-cyan-900 mr-2"></div>Chord Note</div>
         <div className="flex items-center"><div className="w-4 h-4 rounded-full border-2 border-gray-400 mr-2"></div>Scale Note</div>
       </div>

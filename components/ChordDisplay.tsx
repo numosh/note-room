@@ -46,7 +46,8 @@ const ChordDisplay: React.FC<ChordDisplayProps> = ({ chordData, onPlay, isPlayin
       <div className="flex justify-center items-center py-4" style={{ minWidth: '500px' }}>
         <div className="flex justify-center items-center space-x-2 md:space-x-4">
           {chordData.notes.map((note, index) => {
-            const isRoot = index === 0;
+            const isRoot = note === chordData.root;
+            const isBass = index === 0;
             const interval = chordData.intervals[index];
 
             // Calculate interval from previous note
@@ -55,6 +56,15 @@ const ChordDisplay: React.FC<ChordDisplayProps> = ({ chordData, onPlay, isPlayin
               const semitones = getIntervalSemitones(chordData.notes[index - 1], note);
               intervalFromPrev = INTERVAL_ABBREVIATIONS[semitones];
             }
+            
+            let noteClass = 'bg-gray-700 text-white border-4 border-gray-600';
+            if (isRoot) {
+                noteClass = 'bg-yellow-400 text-black border-4 border-yellow-300';
+            }
+            if (isBass && !isRoot) {
+                noteClass = 'bg-purple-500 text-white border-4 border-purple-400';
+            }
+
 
             return (
               <React.Fragment key={`${note}-${index}`}>
@@ -71,11 +81,7 @@ const ChordDisplay: React.FC<ChordDisplayProps> = ({ chordData, onPlay, isPlayin
                 {/* Note Circle */}
                 <div className="flex flex-col items-center gap-2">
                   <div
-                    className={`w-20 h-20 md:w-24 md:h-24 rounded-full flex flex-col justify-center items-center shadow-lg transition-all duration-300
-                    ${isRoot 
-                      ? 'bg-yellow-400 text-black border-4 border-yellow-300' 
-                      : 'bg-gray-700 text-white border-4 border-gray-600'
-                    }`}
+                    className={`w-20 h-20 md:w-24 md:h-24 rounded-full flex flex-col justify-center items-center shadow-lg transition-all duration-300 ${noteClass}`}
                   >
                     <span className="text-3xl md:text-4xl font-bold font-mono">{note}</span>
                   </div>
